@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routerConfig: appRouter,
       title: 'Material App',
-      theme: AppTheme().getTheme(),
+      theme: AppTheme.getTheme(),
     );
   }
 }

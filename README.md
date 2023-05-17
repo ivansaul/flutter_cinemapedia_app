@@ -4,6 +4,9 @@ A new Flutter project template. Start your Flutter project with this template fe
 
 ![](https://i.imgur.com/UF5msgi.png)
 
+- [UI - Figma](https://www.figma.com/community/file/1088719884686291024)
+- [UI - Figma](https://www.figma.com/community/file/1158921876927860533)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
