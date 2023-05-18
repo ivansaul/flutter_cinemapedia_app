@@ -1,8 +1,8 @@
 # flutter_template
 
-A new Flutter project template. Start your Flutter project with this template featuring a beautiful preview.
+A simple project using The Movie DB based on Flutter Clean architecture and material designs & animations.
 
-![](https://i.imgur.com/UF5msgi.png)
+![](https://i.imgur.com/YpWFkIL.jpg)
 
 - [UI - Figma](https://www.figma.com/community/file/1088719884686291024)
 - [UI - Figma](https://www.figma.com/community/file/1158921876927860533)
