@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_template/presentation/providers/moviedb_provider.dart';
+import 'package:flutter_template/presentation/providers/movies/movies_provider.dart';
 
 class TestScren extends ConsumerStatefulWidget {
   const TestScren({Key? key}) : super(key: key);

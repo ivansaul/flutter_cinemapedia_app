@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_template/config/environment/environment.dart';
 import 'package:flutter_template/domain/entities/movie.dart';
 import 'package:flutter_template/domain/repositories/movies_repositoriy.dart';
-import 'package:flutter_template/infrastructure/entities/movie_db_response.dart';
+import 'package:flutter_template/infrastructure/models/moviedb_response.dart';
 import 'package:flutter_template/infrastructure/mappers/moviedb_mapper.dart';
 
 class MoviesRepositoryImpl extends MoviesRepository {
@@ -16,27 +16,57 @@ class MoviesRepositoryImpl extends MoviesRepository {
     ),
   );
 
-  @override
-  Future<List<Movie>> getNowPlaying({int page = 1}) async {
-    final response = await _dio.get('/movie/now_playing');
-    final data = response.data;
-    final MovieDBResponse movieDBResponse = MovieDBResponse.fromJson(data);
+  Future<List<Movie>> _jsonToMovies(Map<String, dynamic> json) async {
+    final movieDBResponse = MovieDBResponse.fromJson(json);
     final resultsMovieDB = movieDBResponse.results;
-    final results = resultsMovieDB
+    final movies = resultsMovieDB
         .map((movieDB) => MovieDBMapper.moviedbToMovie(movieDB))
         .toList();
-    return results;
+    return movies;
   }
 
   @override
-  Future<List<Movie>> upComng({int page = 1}) async {
-    final response = await _dio.get('/movie/upcoming');
-    final data = response.data;
-    final MovieDBResponse movieDBResponse = MovieDBResponse.fromJson(data);
+  Future<List<Movie>> getNowPlaying({int page = 1}) async {
+    final response = await _dio.get(
+      '/movie/now_playing',
+      queryParameters: {'page': page},
+    );
+    final MovieDBResponse movieDBResponse =
+        MovieDBResponse.fromJson(response.data);
     final resultsMovieDB = movieDBResponse.results;
-    final results = resultsMovieDB
+    final movies = resultsMovieDB
         .map((movieDB) => MovieDBMapper.moviedbToMovie(movieDB))
         .toList();
-    return results;
+    return movies;
+  }
+
+  @override
+  Future<List<Movie>> getUpComng({int page = 1}) async {
+    final response = await _dio.get(
+      '/movie/upcoming',
+      queryParameters: {'page': page},
+    );
+
+    return _jsonToMovies(response.data);
+  }
+
+  @override
+  Future<List<Movie>> getTopRated({int page = 1}) async {
+    final response = await _dio.get(
+      '/movie/top_rated',
+      queryParameters: {'page': page},
+    );
+
+    return _jsonToMovies(response.data);
+  }
+
+  @override
+  Future<List<Movie>> getPopular({int page = 1}) async {
+    final response = await _dio.get(
+      '/movie/popular',
+      queryParameters: {'page': page},
+    );
+
+    return _jsonToMovies(response.data);
   }
 }

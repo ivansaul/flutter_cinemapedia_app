@@ -1,1 +1,2 @@
-export 'home_screen.dart';
+export 'movies/home_screen.dart';
+export 'movies/movie_detail_screen.dart';

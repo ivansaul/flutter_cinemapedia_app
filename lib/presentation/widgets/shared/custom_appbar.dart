@@ -38,6 +38,11 @@ class CustomAppBar extends StatelessWidget {
                   ),
                   width: 4,
                 ),
+                // border: Border.all(
+                //   strokeAlign: BorderSide.strokeAlignOutside,
+                //   color: AppTheme.primarySoft,
+                //   width: 4,
+                // ),
                 // borderRadius: BorderRadius.circular(16),
               ),
             ),

@@ -95,7 +95,7 @@ class _Slide extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      movie.releaseDate,
+                      movie.releaseDate.toString(),
                       style: AppTheme.h6Regular.copyWith(
                         color: AppTheme.primaryBlueAccent,
                       ),
