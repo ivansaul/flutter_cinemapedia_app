@@ -2,8 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter_template/config/environment/environment.dart';
 import 'package:flutter_template/domain/entities/movie.dart';
 import 'package:flutter_template/domain/repositories/movies_repositoriy.dart';
-import 'package:flutter_template/infrastructure/models/moviedb_response.dart';
 import 'package:flutter_template/infrastructure/mappers/moviedb_mapper.dart';
+
+import '../models/models.dart';
 
 class MoviesRepositoryImpl extends MoviesRepository {
   final _dio = Dio(
@@ -68,5 +69,13 @@ class MoviesRepositoryImpl extends MoviesRepository {
     );
 
     return _jsonToMovies(response.data);
+  }
+
+  @override
+  Future<Movie> getMovieDetail(String movieId) async {
+    final response = await _dio.get('/movie/$movieId');
+    final movieDbDetail = MovieDbDetail.fromJson(response.data);
+    final movie = MovieDBMapper.moviedbDetailToMovie(movieDbDetail);
+    return movie;
   }
 }

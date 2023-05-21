@@ -18,7 +18,12 @@ class MoviesUseCase {
   Future<List<Movie>> getTopRated({int page = 1}) {
     return moviesRepository.getTopRated(page: page);
   }
+
   Future<List<Movie>> getPopular({int page = 1}) {
     return moviesRepository.getPopular(page: page);
+  }
+
+  Future<Movie> getMovieDetail(String movieId) {
+    return moviesRepository.getMovieDetail(movieId);
   }
 }
