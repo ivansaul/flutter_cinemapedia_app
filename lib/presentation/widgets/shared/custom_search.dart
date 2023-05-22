@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_template/presentation/delegates/search_movie_delegate.dart';
+import 'package:flutter_template/presentation/providers/movies/movies_usecase_provider.dart';
 
 import '../../../config/theme/app_theme.dart';
 
-class CustomSearchWidget extends StatelessWidget {
+class CustomSearchWidget extends ConsumerWidget {
   const CustomSearchWidget({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -23,7 +26,15 @@ class CustomSearchWidget extends StatelessWidget {
           child: Row(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  final moviesUseCase = ref.read(moviesUseCaseProvider);
+                  showSearch(
+                    context: context,
+                    delegate: SearchMovieDelagate(
+                      searchMovieCallBack: moviesUseCase.searchMovies,
+                    ),
+                  );
+                },
                 icon: const Icon(
                   Icons.search,
                   color: AppTheme.textColorGrey,

@@ -124,8 +124,8 @@ class MovieDbDetail {
 class BelongsToCollection {
   final int id;
   final String name;
-  final String posterPath;
-  final String backdropPath;
+  final String? posterPath;
+  final String? backdropPath;
 
   BelongsToCollection({
     required this.id,

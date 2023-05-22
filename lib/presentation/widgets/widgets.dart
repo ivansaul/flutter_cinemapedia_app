@@ -5,3 +5,4 @@ export 'shared/custom_search.dart';
 export 'movies/section_movies.dart';
 export 'movies/categories_listchips.dart';
 export 'shared/custom_iconbotton.dart';
+export 'shared/rating_tag.dart';

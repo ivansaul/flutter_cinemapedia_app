@@ -78,4 +78,14 @@ class MoviesRepositoryImpl extends MoviesRepository {
     final movie = MovieDBMapper.moviedbDetailToMovie(movieDbDetail);
     return movie;
   }
+
+  @override
+  Future<List<Movie>> searchMovies(String query) async {
+    final response = await _dio.get(
+      '/search/movie',
+      queryParameters: {'query': query},
+    );
+
+    return _jsonToMovies(response.data);
+  }
 }

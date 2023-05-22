@@ -26,4 +26,8 @@ class MoviesUseCase {
   Future<Movie> getMovieDetail(String movieId) {
     return moviesRepository.getMovieDetail(movieId);
   }
+
+  Future<List<Movie>> searchMovies(String query) {
+    return moviesRepository.searchMovies(query);
+  }
 }

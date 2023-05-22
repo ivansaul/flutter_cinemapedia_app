@@ -1,7 +1,11 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_template/config/theme/app_theme.dart';
+import 'package:flutter_template/domain/entities/actor.dart';
+import 'package:flutter_template/presentation/providers/actors/actors_bymovie_provider.dart';
 import 'package:flutter_template/presentation/providers/movies/movie_detail_provider.dart';
+import 'package:flutter_template/presentation/screens/screens.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../domain/entities/movie.dart';
@@ -23,21 +27,20 @@ class MovieDetailScreenState extends ConsumerState<MovieDetailScreen> {
   void initState() {
     super.initState();
     ref.read(movieDetailProvider.notifier).loadMovieDetail(widget.movieId);
+    ref.read(actorsByMovieProvider.notifier).loadActors(widget.movieId);
   }
 
   @override
   Widget build(BuildContext context) {
     final Movie? movie = ref.watch(movieDetailProvider)[widget.movieId];
     if (movie == null) {
-      return const Scaffold(
-          body: Center(
-        child: CircularProgressIndicator(),
-      ));
+      return const LoadingScreen();
     }
     // final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: AppTheme.primaryDark,
       body: CustomScrollView(
+        physics: const ClampingScrollPhysics(),
         slivers: <Widget>[
           SliverAppBar(
             backgroundColor: AppTheme.primaryDark,
@@ -45,13 +48,22 @@ class MovieDetailScreenState extends ConsumerState<MovieDetailScreen> {
             pinned: true,
             automaticallyImplyLeading: false,
             // expandedHeight: size.height * 0.6,
-            expandedHeight: 600,
+            expandedHeight: 550,
             title: _AppBarTitle(movie: movie),
             flexibleSpace: FlexibleSpaceBar(
               background: _AppBarBackground(movie: movie),
             ),
           ),
-          _InfoSection(movie: movie),
+
+          // Body
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                _SynopsisView(movie: movie),
+                _CastView(movieId: widget.movieId),
+              ],
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: const CustomNavigationBar(),
@@ -88,8 +100,9 @@ class _AppBarBackground extends StatelessWidget {
         ),
         Padding(
           padding:
-              const EdgeInsets.only(left: 24, right: 24, top: 50, bottom: 24),
+              const EdgeInsets.only(left: 24, right: 24, top: 50, bottom: 10),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               const SizedBox(height: 80),
@@ -192,10 +205,10 @@ class _AppBarBackground extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         const Icon(
-                          Icons.ios_share_rounded,
+                          Icons.play_arrow_rounded,
                           color: Colors.white,
                         ),
-                        Text('Share', style: AppTheme.h4Medium),
+                        Text('Play', style: AppTheme.h4Medium),
                       ],
                     ),
                   ),
@@ -215,7 +228,7 @@ class _AppBarBackground extends StatelessWidget {
                     borderRadius: 48,
                     onTap: () {},
                     child: const Icon(
-                      Icons.language,
+                      Icons.ios_share_rounded,
                       color: AppTheme.primaryBlueAccent,
                     ),
                   ),
@@ -274,8 +287,8 @@ class _AppBarTitle extends StatelessWidget {
   }
 }
 
-class _InfoSection extends StatelessWidget {
-  const _InfoSection({
+class _SynopsisView extends StatelessWidget {
+  const _SynopsisView({
     required this.movie,
   });
 
@@ -283,25 +296,86 @@ class _InfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverList(
-      delegate: SliverChildListDelegate(
-        [
-          Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Story Line', style: AppTheme.h3Semibold),
-                const SizedBox(height: 10),
-                Text(
-                  movie.overview,
-                  style: AppTheme.h5Regular
-                      .copyWith(color: AppTheme.textColorWhiteGrey),
-                ),
-                const SizedBox(height: 24),
-                Text('Cast and Crew', style: AppTheme.h3Semibold),
-                const SizedBox(height: 600),
-              ],
+    return Padding(
+      padding: const EdgeInsets.only(right: 24, left: 24, top: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Synopsis', style: AppTheme.h3Semibold),
+          const SizedBox(height: 10),
+          Text(
+            movie.overview,
+            style:
+                AppTheme.h5Regular.copyWith(color: AppTheme.textColorWhiteGrey),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CastView extends ConsumerWidget {
+  final String movieId;
+
+  const _CastView({
+    Key? key,
+    required this.movieId,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final List<Actor>? actors = ref.watch(actorsByMovieProvider)[movieId];
+    if (actors == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    return Padding(
+      padding: const EdgeInsets.only(right: 24, left: 24, top: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Cast and Crew', style: AppTheme.h3Semibold),
+          const SizedBox(height: 15),
+          SizedBox(
+            height: 50,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: actors.length,
+              itemBuilder: (BuildContext context, int index) {
+                final Actor actor = actors[index];
+                return FadeInRight(
+                  child: Container(
+                    padding: const EdgeInsets.only(right: 15),
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: NetworkImage(actor.profilePath),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(actor.name, style: AppTheme.h5Semibold),
+                            Text(
+                              actor.character ?? '',
+                              style: AppTheme.h7Medium
+                                  .copyWith(color: AppTheme.textColorGrey),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],
