@@ -120,59 +120,28 @@ class _AppBarBackground extends StatelessWidget {
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextButton.icon(
-                    onPressed: null,
-                    icon: const Icon(
-                      Icons.date_range,
-                      color: AppTheme.textColorGrey,
-                      size: 15,
-                    ),
-                    label: Text(
-                      movie.releaseDate.year.toString(),
-                      style: AppTheme.h6Medium.copyWith(
-                        color: AppTheme.textColorGrey,
-                      ),
-                    ),
+                  TextIcon(
+                    iconData: Icons.date_range,
+                    content: movie.releaseDate.year.toString(),
                   ),
                   Container(
                     width: 1,
                     height: 15,
                     color: AppTheme.textColorGrey,
                   ),
-                  TextButton.icon(
-                    onPressed: null,
-                    icon: const Icon(
-                      Icons.access_time,
-                      color: AppTheme.textColorGrey,
-                      size: 15,
-                    ),
-                    label: Text(
-                      '148 Minutes',
-                      style: AppTheme.h6Medium.copyWith(
-                        color: AppTheme.textColorGrey,
-                      ),
-                    ),
+                  const TextIcon(
+                    iconData: Icons.access_time,
+                    content: '148 Minutes',
                   ),
                   Container(
                     width: 1,
                     height: 15,
                     color: AppTheme.textColorGrey,
                   ),
-                  TextButton.icon(
-                    onPressed: null,
-                    icon: const Icon(
-                      Icons.local_movies_rounded,
-                      color: AppTheme.textColorGrey,
-                      size: 15,
-                    ),
-                    label: Text(
-                      movie.genreIds[0],
-                      style: AppTheme.h6Medium.copyWith(
-                        color: AppTheme.textColorGrey,
-                      ),
-                    ),
+                  TextIcon(
+                    iconData: Icons.local_movies_rounded,
+                    content: movie.genreIds[0],
                   ),
                 ],
               ),

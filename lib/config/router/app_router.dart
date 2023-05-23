@@ -23,5 +23,10 @@ final appRouter = GoRouter(
       path: '/test',
       builder: (context, state) => const TestScren(),
     ),
+    GoRoute(
+      path: '/search',
+      name: SearchMoviesScreen.name,
+      builder: (context, state) =>  const SearchMoviesScreen(),
+    ),
   ],
 );

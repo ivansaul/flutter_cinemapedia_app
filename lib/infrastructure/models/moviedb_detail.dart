@@ -6,7 +6,7 @@ class MovieDbDetail {
   final List<Genre> genres;
   final String homepage;
   final int id;
-  final String imdbId;
+  final String? imdbId;
   final String originalLanguage;
   final String originalTitle;
   final String overview;
@@ -55,7 +55,7 @@ class MovieDbDetail {
 
   factory MovieDbDetail.fromJson(Map<String, dynamic> json) => MovieDbDetail(
         adult: json["adult"],
-        backdropPath: json["backdrop_path"],
+        backdropPath: json["backdrop_path"] ?? '',
         belongsToCollection: (json["belongs_to_collection"] == null)
             ? null
             : BelongsToCollection.fromJson(json["belongs_to_collection"]),
@@ -68,7 +68,7 @@ class MovieDbDetail {
         originalTitle: json["original_title"],
         overview: json["overview"],
         popularity: json["popularity"]?.toDouble(),
-        posterPath: json["poster_path"],
+        posterPath: json["poster_path"] ?? '',
         productionCompanies: List<ProductionCompany>.from(
             json["production_companies"]
                 .map((x) => ProductionCompany.fromJson(x))),

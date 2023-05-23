@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_template/config/theme/app_theme.dart';
 import 'package:flutter_template/presentation/providers/movies/movies_provider.dart';
+import 'package:flutter_template/presentation/screens/screens.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../widgets/widgets.dart';
 
@@ -48,7 +50,13 @@ class _HomeViewState extends ConsumerState<_HomeView> {
         physics: const ClampingScrollPhysics(),
         slivers: <Widget>[
           const CustomAppBar(),
-          const CustomSearchWidget(),
+          SliverToBoxAdapter(
+            child: CustomSearchWidget(
+              onPressedLeading: () {
+                context.pushNamed(SearchMoviesScreen.name);
+              },
+            ),
+          ),
           MoviesSlideShowSwipper(movies: upComingMovies),
           SliverToBoxAdapter(
             child: Padding(
