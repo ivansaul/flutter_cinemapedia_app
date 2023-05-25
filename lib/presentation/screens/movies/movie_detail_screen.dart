@@ -1,14 +1,15 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_template/config/helpers/push_image_viewer.dart';
 import 'package:flutter_template/config/theme/app_theme.dart';
 import 'package:flutter_template/domain/entities/actor.dart';
-import 'package:flutter_template/presentation/providers/actors/actors_bymovie_provider.dart';
-import 'package:flutter_template/presentation/providers/movies/movie_detail_provider.dart';
+import 'package:flutter_template/domain/entities/galery.dart';
 import 'package:flutter_template/presentation/screens/screens.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../domain/entities/movie.dart';
+import '../../providers/providers.dart';
 import '../../widgets/widgets.dart';
 
 class MovieDetailScreen extends ConsumerStatefulWidget {
@@ -28,6 +29,7 @@ class MovieDetailScreenState extends ConsumerState<MovieDetailScreen> {
     super.initState();
     ref.read(movieDetailProvider.notifier).loadMovieDetail(widget.movieId);
     ref.read(actorsByMovieProvider.notifier).loadActors(widget.movieId);
+    ref.read(galeryByMovieProvider.notifier).loadGalery(widget.movieId);
   }
 
   @override
@@ -48,7 +50,7 @@ class MovieDetailScreenState extends ConsumerState<MovieDetailScreen> {
             pinned: true,
             automaticallyImplyLeading: false,
             // expandedHeight: size.height * 0.6,
-            expandedHeight: 550,
+            expandedHeight: 525,
             title: _AppBarTitle(movie: movie),
             flexibleSpace: FlexibleSpaceBar(
               background: _AppBarBackground(movie: movie),
@@ -61,12 +63,66 @@ class MovieDetailScreenState extends ConsumerState<MovieDetailScreen> {
               [
                 _SynopsisView(movie: movie),
                 _CastView(movieId: widget.movieId),
+                _GaleryView(movieId: widget.movieId),
               ],
             ),
           ),
         ],
       ),
-      bottomNavigationBar: const CustomNavigationBar(),
+    );
+  }
+}
+
+class _GaleryView extends ConsumerWidget {
+  final String movieId;
+  const _GaleryView({
+    required this.movieId,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Galery? galery = ref.watch(galeryByMovieProvider)[movieId];
+    if (galery == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    return Padding(
+      padding: const EdgeInsets.only(right: 24, left: 24, top: 24, bottom: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Galery', style: AppTheme.h3Semibold),
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 160,
+            width: double.infinity,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: galery.backdrops.length,
+              itemBuilder: (BuildContext context, int index) {
+                final backdrop = galery.backdrops[index];
+                return Container(
+                  margin: const EdgeInsets.only(right: 20),
+                  width: 250,
+                  height: double.infinity,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: GestureDetector(
+                      onTap: () => ImageViewer.push(context, backdrop.filePath),
+                      child: Hero(
+                        tag: backdrop.filePath,
+                        child: Image.network(
+                          backdrop.filePath,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -111,9 +167,15 @@ class _AppBarBackground extends StatelessWidget {
                 height: 287,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15),
-                  child: Image.network(
-                    movie.posterPath,
-                    fit: BoxFit.cover,
+                  child: GestureDetector(
+                    onTap: () => ImageViewer.push(context, movie.posterPath),
+                    child: Hero(
+                      tag: movie.posterPath,
+                      child: Image.network(
+                        movie.posterPath,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -316,14 +378,21 @@ class _CastView extends ConsumerWidget {
                     padding: const EdgeInsets.only(right: 15),
                     child: Row(
                       children: [
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: NetworkImage(actor.profilePath),
-                              fit: BoxFit.cover,
+                        GestureDetector(
+                          onTap: () =>
+                              ImageViewer.push(context, actor.profilePath),
+                          child: Hero(
+                            tag: actor.profilePath,
+                            child: Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: NetworkImage(actor.profilePath),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
                           ),
                         ),
