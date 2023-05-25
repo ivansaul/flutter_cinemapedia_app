@@ -22,6 +22,7 @@ class MoviesRepositoryImpl extends MoviesRepository {
     final resultsMovieDB = movieDBResponse.results;
     final movies = resultsMovieDB
         .map((movieDB) => MovieDBMapper.moviedbToMovie(movieDB))
+        .where((movieDB) => movieDB.posterPath != 'no-image')
         .toList();
     return movies;
   }
@@ -32,13 +33,7 @@ class MoviesRepositoryImpl extends MoviesRepository {
       '/movie/now_playing',
       queryParameters: {'page': page},
     );
-    final MovieDBResponse movieDBResponse =
-        MovieDBResponse.fromJson(response.data);
-    final resultsMovieDB = movieDBResponse.results;
-    final movies = resultsMovieDB
-        .map((movieDB) => MovieDBMapper.moviedbToMovie(movieDB))
-        .toList();
-    return movies;
+    return _jsonToMovies(response.data);
   }
 
   @override

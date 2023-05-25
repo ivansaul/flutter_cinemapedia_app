@@ -1,9 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_template/config/theme/app_theme.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 class CustomNavigationBar extends StatelessWidget {
-  const CustomNavigationBar({Key? key}) : super(key: key);
+  final int selectedIndex;
+  const CustomNavigationBar({
+    Key? key,
+    required this.selectedIndex,
+  }) : super(key: key);
+
+  void onTabChange(BuildContext context, int index) {
+    switch (index) {
+      case 0:
+        return context.go('/home/0');
+      case 1:
+        return context.go('/home/1');
+      case 2:
+        return context.go('/home/2');
+      case 3:
+        return context.go('/home/3');
+      default:
+        return context.go('/home/0');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +66,8 @@ class CustomNavigationBar extends StatelessWidget {
               text: 'Profile',
             ),
           ],
-          selectedIndex: 0,
-          onTabChange: (index) {
-            // setState(() {
-            //   _selectedIndex = index;
-            // });
-          },
+          selectedIndex: selectedIndex,
+          onTabChange: (index) => onTabChange(context, index),
         ),
       ),
     );

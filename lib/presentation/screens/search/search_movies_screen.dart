@@ -19,17 +19,25 @@ class SearchMoviesScreen extends ConsumerWidget {
       backgroundColor: AppTheme.primaryDark,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
           child: Column(
             children: [
               const SearchWidget(),
               const SizedBox(height: 24),
               Expanded(
                 child: FutureBuilder(
-                  future: ref.read(moviesUseCaseProvider).searchMovies(query),
+                  future: query.isNotEmpty
+                      ? ref.read(moviesUseCaseProvider).searchMovies(query)
+                      : null,
                   builder: (BuildContext context,
                       AsyncSnapshot<List<Movie>> snapshot) {
                     final movies = snapshot.data ?? [];
+
+                    if (query.isEmpty) return Container();
+
+                    // if (snapshot.connectionState == ConnectionState.waiting) {
+                    //   return const Center(child: CircularProgressIndicator());
+                    // }
 
                     if (snapshot.hasData & movies.isEmpty & query.isNotEmpty) {
                       return const _MovieNotFound();
@@ -111,7 +119,7 @@ class SearchWidget extends ConsumerWidget {
         children: [
           IconButton(
             onPressed: () {
-              context.pop();
+              context.go('/');
             },
             icon: const Icon(
               Icons.arrow_back_ios_new_rounded,
@@ -227,7 +235,7 @@ class _CardView extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      context.push('/movie/${movie.id}');
+                      context.push('/home/0/movie/${movie.id}');
                     },
                     child: const TextIcon(
                       iconData: Icons.local_movies_rounded,

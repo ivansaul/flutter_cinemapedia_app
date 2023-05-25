@@ -3,12 +3,15 @@ import 'package:flutter_template/presentation/screens/test_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/home/0',
   routes: [
     GoRoute(
-      path: '/',
+      path: '/home/:page',
       name: HomeScreen.name,
-      builder: (context, state) => const HomeScreen(),
+      builder: (context, state) {
+        final pageIndex = int.parse(state.pathParameters['page'] ?? '0');
+        return HomeScreen(pageIndex: pageIndex);
+      },
       routes: [
         GoRoute(
           path: 'movie/:id',
@@ -20,13 +23,17 @@ final appRouter = GoRouter(
       ],
     ),
     GoRoute(
+      path: '/',
+      redirect: (_, __) => '/home/0',
+    ),
+    GoRoute(
       path: '/test',
       builder: (context, state) => const TestScren(),
     ),
     GoRoute(
       path: '/search',
       name: SearchMoviesScreen.name,
-      builder: (context, state) =>  const SearchMoviesScreen(),
+      builder: (context, state) => const SearchMoviesScreen(),
     ),
   ],
 );

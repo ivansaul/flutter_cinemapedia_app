@@ -56,7 +56,7 @@ class _SectionMoviesState extends State<SectionMovies> {
             itemBuilder: (BuildContext context, int index) {
               final Movie movie = widget.movies[index];
               return GestureDetector(
-                onTap:() =>  context.push('/movie/${movie.id}'),
+                onTap:() =>  context.push('/home/0/movie/${movie.id}'),
                 child: FadeInRight(
                   child: _Card(movie: movie),
                 ),
