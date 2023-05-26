@@ -10,10 +10,10 @@ class CustomIconButton extends StatelessWidget {
   final void Function()? onTap;
   const CustomIconButton({
     super.key,
-    required this.width,
-    required this.height,
-    required this.child,
     required this.onTap,
+    required this.child,
+    this.width = 48,
+    this.height = 48,
     this.borderRadius = 16,
     this.color = AppTheme.primarySoft,
   });
