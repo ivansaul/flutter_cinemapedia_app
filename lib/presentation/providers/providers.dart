@@ -6,3 +6,4 @@ export 'actors/actors_bymovie_provider.dart';
 export 'actors/actors_usecase_provider.dart';
 export 'galery/galery_bymovie_provider.dart';
 export 'galery/galery_usecase_provider.dart';
+export 'localdb/localdb_usecase_provider.dart';

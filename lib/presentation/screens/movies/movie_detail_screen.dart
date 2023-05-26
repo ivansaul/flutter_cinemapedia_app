@@ -273,7 +273,7 @@ class _AppBarBackground extends StatelessWidget {
   }
 }
 
-class _AppBarTitle extends StatelessWidget {
+class _AppBarTitle extends ConsumerWidget {
   const _AppBarTitle({
     required this.movie,
   });
@@ -281,7 +281,8 @@ class _AppBarTitle extends StatelessWidget {
   final Movie movie;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isfavorite = ref.watch(isFavoriteMovieProvider(movie.id));
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -306,12 +307,23 @@ class _AppBarTitle extends StatelessWidget {
           width: 32,
           height: 32,
           borderRadius: 12,
-          child: const Icon(
+          child: Icon(
             Icons.favorite,
-            color: Colors.white,
+            color: (isfavorite.when(
+              data: (data) {
+                // print('data $data');
+                return data ? Colors.orange : Colors.white;
+              },
+              error: (error, stackTrace) => Colors.red,
+              loading: () => Colors.amber,
+            )),
             size: 18,
           ),
-          onTap: () => context.pop(),
+          onTap: () async {
+            await ref.watch(localUseCaseProvider).toggleFavorite(movie);
+            ref.invalidate(isFavoriteMovieProvider(movie.id));
+            ref.invalidate(loadFavoritesProvider);
+          },
         ),
       ],
     );
