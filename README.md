@@ -45,10 +45,7 @@ Check it yourself :)
 
 ## Demo
 
-
-<p align="center">
-  <img src="https://github.com/ivansaul/demos/blob/master/flutter/cinemapedia-demo.gif" alt="Demo">
-</p>
+https://github.com/ivansaul/flutter_cinemapedia_app/assets/15005581/03f4bdd4-905e-4be7-baac-bcfc41c04719
 
 ## Packages we are using:
 
