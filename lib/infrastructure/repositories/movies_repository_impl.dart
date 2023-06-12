@@ -12,7 +12,7 @@ class MoviesRepositoryImpl extends MoviesRepository {
       baseUrl: 'https://api.themoviedb.org/3',
       queryParameters: {
         'api_key': Environment.movieDBKey,
-        'language': 'es-MX',
+        'language': 'en',
       },
     ),
   );
